@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\User;
 use App\Post;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
@@ -14,16 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserTableSeeder::class);
         User::truncate();
         Post::truncate();
         DB::table('post_user')->truncate();
 
-        factory(User::class, 50)
-            ->create()
-            ->each(function($user) {
-                $postIds = factory(App\Post::class, 2)->create()->pluck('id')->toArray();
-                $user->likes()->sync($postIds);
-            });
+        $users = factory(User::class, 10)->create();
+        $users->each(function($user) {
+            $posts = factory(Post::class, rand(3,5))->make();
+            $user->posts()->saveMany($posts);
+            $postIds = $posts->pluck('id')->toArray();
+            $user->likes()->sync($postIds);
+        });
     }
 }
