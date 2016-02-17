@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::resource('user', 'UserController');
+Route::resource('post', 'PostController');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
