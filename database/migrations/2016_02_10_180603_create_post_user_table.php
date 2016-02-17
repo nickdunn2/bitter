@@ -17,6 +17,7 @@ class CreatePostUserTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('post_id')->unsigned();
             $table->timestamps();
+            $table->index(['user_id', 'post_id']);
         });
     }
 

@@ -26,6 +26,6 @@ class Post extends Model
      * Get the users who have liked the post.
      */
     public function likes() {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withTimestamps();
     }
 }
