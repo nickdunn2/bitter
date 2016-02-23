@@ -15,8 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('user', 'UserController');
-Route::resource('post', 'PostController');
+Route::resource('users', 'UsersController', ['except' => [
+    'create', 'edit', 'store'
+]]);
+Route::resource('posts', 'PostsController', ['except' => [
+    'create', 'edit'
+]]);
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +33,8 @@ Route::resource('post', 'PostController');
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
+Route::group(['middleware' => 'web'], function () {
+    Route::auth();
+
+    Route::get('/home', 'HomeController@index');
 });

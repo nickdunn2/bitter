@@ -7,7 +7,7 @@ use App\User;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class UserController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,17 +17,6 @@ class UserController extends Controller
     public function index()
     {
         return User::paginate(10);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -50,7 +39,12 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // This still needs some sort of authentication, maybe place inside middleware?
+        $user = User::findOrFail($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+        return $user;
     }
 
     /**
@@ -61,6 +55,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+        return $user;
     }
 }
