@@ -15,12 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('users', 'UsersController', ['except' => [
-    'create', 'edit', 'store'
-]]);
-Route::resource('posts', 'PostsController', ['except' => [
-    'create', 'edit'
-]]);
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,4 +33,22 @@ Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
     Route::get('/home', 'HomeController@index');
+
+    Route::resource('users', 'UsersController', ['except' => [
+        'create', 'edit', 'store'
+    ]]);
+
+    Route::resource('posts', 'PostsController', ['except' => [
+        'create', 'edit'
+    ]]);
+
+    Route::group(['middleware' => 'auth'], function() {
+        Route::resource('posts', 'PostsController', [
+            'only' => [
+                'store',
+                'create',
+                'destroy'
+            ]
+        ]);
+    });
 });
