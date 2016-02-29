@@ -28,10 +28,10 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         $post = new Post;
-        $post->user_id = Auth::user()->id;
+        $post->user_id = auth()->user()->id;
         $post->url = $request->url;
         $post->title = $request->title;
-        $post->content = $request->content;
+        $post->content = $request->post_content;
         $post->save();
 
         return $post;
@@ -58,12 +58,12 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         $post = Post::findOrFail($id);
-        $post->user_id = Auth::user()->id;
+        $this->authorize('update-destroy', $post);
+        $post->user_id = auth()->user()->id;
         $post->url = $request->url;
         $post->title = $request->title;
-        $post->content = $request->content;
+        $post->content = $request->post_content;
         $post->save();
-
         return $post;
     }
 
@@ -76,6 +76,7 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
+        $this->authorize('update-destroy', $post);
         $post->delete();
         return $post;
     }
