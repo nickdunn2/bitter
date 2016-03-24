@@ -47,6 +47,8 @@ var PostView = Backbone.View.extend({
 });
 
 var PostsView = Backbone.View.extend({
+    tagName: 'ul',
+
     initialize: function() {
         this.collection.on('add', this.addOne, this);
         this.collection.on('reset', this.addAll, this);
@@ -65,3 +67,24 @@ var PostsView = Backbone.View.extend({
         this.addAll();
     }
 });
+
+var AddPostView = Backbone.View.extend({
+    el: '#addPost',
+
+    events: {
+        'submit': 'addPost'
+    },
+
+    addPost: function(e) {
+        e.preventDefault();
+        this.collection.create({
+            post_content: this.$('#newPost').val()
+        }, { wait: true });
+    }
+});
+
+var posts = new PostsCollection();
+posts.fetch();
+var postsView = new PostsView({ collection: posts });
+postsView.render();
+$('#posts').append(postsView.el);
