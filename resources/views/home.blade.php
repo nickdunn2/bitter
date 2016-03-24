@@ -11,6 +11,8 @@
                     You are logged in!
                 </div>
             </div>
+
+            <div id="main"></div>
         </div>
     </div>
 </div>

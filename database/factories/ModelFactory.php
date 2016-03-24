@@ -22,9 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Post::class, function (Faker\Generator $faker) {
     return [
-        'url' => $faker->url,
-        'title' => $faker->word,
-        'content' => $faker->paragraph
+        'post_content' => $faker->paragraph
     ];
 });
 
