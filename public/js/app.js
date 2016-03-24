@@ -17,7 +17,10 @@ var PostModel = Backbone.Model.extend({
 
 var PostsCollection = Backbone.Collection.extend({
     url: '/posts',
-    model: PostModel
+    model: PostModel,
+    parse: function(resp) {
+        return resp.data;
+    }
 });
 
 var PostView = Backbone.View.extend({
