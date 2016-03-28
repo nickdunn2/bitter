@@ -9,7 +9,11 @@
                 <input type="submit" value="Post">
             </form>
 
-            <div id="posts"></div>
+            <div id="posts">
+                <script type="text/template" id="postTemplate">
+                    <span><%= post_content %></span>
+                </script>
+            </div>
         </div>
     </div>
 </div>

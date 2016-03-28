@@ -29,10 +29,10 @@ var PostView = Backbone.View.extend({
     className: 'post',
 
     events: {
-        'click h2': 'alertStatus'
+        // 'click h2': 'alertStatus'
     },
 
-    template: _.template('<h2><%= post_content %></h2>'),
+    template: _.template($('#postTemplate').html()),
 
     render: function() {
         var attributes = this.model.toJSON();
@@ -50,7 +50,7 @@ var PostsView = Backbone.View.extend({
     tagName: 'ul',
 
     initialize: function() {
-        this.collection.on('add', this.addOne, this);
+        this.collection.on('add', this.addNew, this);
         this.collection.on('reset', this.addAll, this);
     },
 
@@ -59,12 +59,18 @@ var PostsView = Backbone.View.extend({
         this.$el.append(postView.render().el);
     },
 
+    addNew: function(post) {
+        var postView = new PostView({ model: post });
+        this.$el.prepend(postView.render().el);
+    },
+
     addAll: function() {
         this.collection.forEach(this.addOne, this);
     },
 
     render: function() {
         this.addAll();
+        return this;
     }
 });
 
@@ -80,11 +86,21 @@ var AddPostView = Backbone.View.extend({
         this.collection.create({
             post_content: this.$('#newPost').val()
         }, { wait: true });
+
+        this.clearForm();
+    },
+
+    clearForm: function() {
+        this.$('#newPost').val('');
     }
 });
 
 var posts = new PostsCollection();
-posts.fetch();
-var postsView = new PostsView({ collection: posts });
-postsView.render();
-$('#posts').append(postsView.el);
+posts.fetch({
+    success: function() {
+        var postsView = new PostsView({ collection: posts });
+        postsView.render();
+        $('#posts').append(postsView.el);
+        var addPostView = new AddPostView({ collection: posts });
+    }
+});
