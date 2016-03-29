@@ -23,6 +23,23 @@ var PostsCollection = Backbone.Collection.extend({
     }
 });
 
+var HomeView = Backbone.View.extend({
+    el: '#main',
+
+    template: _.template($('#mainTemplate').html()),
+
+    render: function() {
+        this.$el.html(this.template());
+        var posts = new PostsCollection();
+        posts.fetch();
+        var addPostView = new AddPostView({ collection: posts });
+        addPostView.render();
+        var postsView = new PostsView({ collection: posts });
+        this.$el.find('#all-posts').html(postsView.render().el);
+        return this;
+    }
+});
+
 var PostView = Backbone.View.extend({
     tagName: 'li',
 
@@ -50,8 +67,9 @@ var PostsView = Backbone.View.extend({
     tagName: 'ul',
 
     initialize: function() {
-        this.collection.on('add', this.addNew, this);
-        this.collection.on('reset', this.addAll, this);
+        this.collection.on('update', this.render, this);
+        this.collection.on('sync', this.addNew, this);
+        // this.collection.on('reset', this.addAll, this);
     },
 
     addOne: function(post) {
@@ -75,7 +93,9 @@ var PostsView = Backbone.View.extend({
 });
 
 var AddPostView = Backbone.View.extend({
-    el: '#addPost',
+    el: '#add-post',
+
+    template: _.template($('#addPostTemplate').html()),
 
     events: {
         'submit': 'addPost'
@@ -84,23 +104,24 @@ var AddPostView = Backbone.View.extend({
     addPost: function(e) {
         e.preventDefault();
         this.collection.create({
-            post_content: this.$('#newPost').val()
+            post_content: this.$('#new-post').val()
         }, { wait: true });
 
         this.clearForm();
     },
 
     clearForm: function() {
-        this.$('#newPost').val('');
+        this.$('#new-post').val('');
+    },
+
+    render: function() {
+        this.$el.html(this.template());
+        return this;
     }
 });
 
-var posts = new PostsCollection();
-posts.fetch({
-    success: function() {
-        var postsView = new PostsView({ collection: posts });
-        postsView.render();
-        $('#posts').append(postsView.el);
-        var addPostView = new AddPostView({ collection: posts });
-    }
-});
+var homeView = new HomeView();
+homeView.render();
+
+
+
